@@ -1,0 +1,49 @@
+name: Build spine-godot GDExtension (Godot 4.x)
+
+on:
+  workflow_call:
+    inputs:
+      godot_tag:
+        required: true
+        type: string
+        default: "Godot tag not specified!"
+      godot_version:
+        required: true
+        type: string
+        default: "Godot version not specified!"
+      dev:
+        required: true
+        type: boolean
+        default: false
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_EC2_METADATA_DISABLED: true
+  GODOT_TAG: ${{ inputs.godot_tag }}
+  GODOT_VERSION: ${{ inputs.godot_version }}
+  DEV_BUILD: ${{ inputs.dev }}
+
+jobs:
+  build-windows:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Setup python and scons
+        uses: ./.github/actions/setup-godot-deps-4
+
+      - name: Build GDExtension
+        shell: bash
+        run: |
+          cd spine-godot/build
+          ./setup-extension.sh $GODOT_TAG $DEV_BUILD
+          ./build-extension.sh windows
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gdextension-windows-${{ env.GODOT_TAG }}
+          path: spine-godot/example-v4-extension/bin/windows/*.dll
