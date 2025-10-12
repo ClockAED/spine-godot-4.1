@@ -120,16 +120,6 @@ SkeletonData *SkeletonBinary::readSkeletonData(const unsigned char *binary, cons
 
 	char *skeletonDataVersion = readString(input);
 	skeletonData->_version.own(skeletonDataVersion);
-
-	if (!skeletonData->_version.startsWith(SPINE_VERSION_STRING)) {
-		char errorMsg[255];
-		snprintf(errorMsg, 255, "Skeleton version %s does not match runtime version %s", skeletonData->_version.buffer(), SPINE_VERSION_STRING);
-		setError(errorMsg, "");
-		delete input;
-		delete skeletonData;
-		return NULL;
-	}
-
 	skeletonData->_x = readFloat(input);
 	skeletonData->_y = readFloat(input);
 	skeletonData->_width = readFloat(input);
