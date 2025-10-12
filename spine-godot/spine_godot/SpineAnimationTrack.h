@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated April 5, 2025. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2025, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,12 +23,13 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #pragma once
 
+#ifndef SPINE_GODOT_EXTENSION
 #include "SpineSprite.h"
 #include "scene/animation/animation_player.h"
 #include "scene/resources/animation.h"
@@ -38,9 +39,11 @@ class SpineAnimationTrack : public Node {
 protected:
 	// These are not exposed in the inspector, see SpineAnimationTrackInspectorPlugin.
 	// Instead, they are are keyed by the animations created in setup_animation_player
-	// and primarily used for animation player editor support like scrubbing.
+	// and primarily used for animation player editor support like scrubbing and playing
+	// back the .
 	String animation_name;
 	bool loop;
+	bool animation_changed;
 
 	// These can be set by the user.
 	int track_index;
@@ -50,8 +53,8 @@ protected:
 	bool shortest_rotation;
 	float time_scale;
 	float alpha;
-	float attachment_threshold;
-	float draw_order_threshold;
+	float mix_attachment_threshold;
+	float mix_draw_order_threshold;
 	SpineConstant::MixBlend mix_blend;
 	bool blend_tree_mode;
 	bool debug;
@@ -113,13 +116,13 @@ public:
 
 	float get_alpha();
 
-	void set_attachment_threshold(float _attachment_threshold);
+	void set_mix_attachment_threshold(float _mix_attachment_threshold);
 
-	float get_attachment_threshold();
+	float get_mix_attachment_threshold();
 
-	void set_draw_order_threshold(float _draw_order_threshold);
+	void set_mix_draw_order_threshold(float _mix_draw_order_threshold);
 
-	float get_draw_order_threshold();
+	float get_mix_draw_order_threshold();
 
 	void set_mix_blend(SpineConstant::MixBlend _blend);
 
@@ -133,3 +136,5 @@ public:
 
 	bool get_debug();
 };
+
+#endif

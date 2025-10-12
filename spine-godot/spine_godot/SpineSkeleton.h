@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated April 5, 2025. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2025, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #pragma once
@@ -36,6 +36,7 @@
 #include "SpineIkConstraint.h"
 #include "SpineTransformConstraint.h"
 #include "SpinePathConstraint.h"
+#include "SpinePhysicsConstraint.h"
 
 #include <unordered_map>
 
@@ -75,7 +76,7 @@ public:
 	SpineSkeleton();
 	~SpineSkeleton() override;
 
-	void update_world_transform();
+	void update_world_transform(SpineConstant::Physics physics);
 
 	void set_to_setup_pose();
 
@@ -103,6 +104,8 @@ public:
 
 	Ref<SpinePathConstraint> find_path_constraint(const String &constraint_name);
 
+	Ref<SpinePhysicsConstraint> find_physics_constraint(const String &constraint_name);
+
 	Rect2 get_bounds();
 
 	Ref<SpineBone> get_root_bone();
@@ -115,9 +118,11 @@ public:
 
 	Array get_ik_constraints();
 
+	Array get_transform_constraints();
+
 	Array get_path_constraints();
 
-	Array get_transform_constraints();
+	Array get_physics_constraints();
 
 	Ref<SpineSkin> get_skin();
 
@@ -142,4 +147,14 @@ public:
 	float get_scale_y();
 
 	void set_scale_y(float v);
+
+	float get_time();
+
+	void set_time(float time);
+
+	void update(float delta);
+
+	void physics_translate(float x, float y);
+
+	void physics_rotate(float x, float y, float degrees);
 };

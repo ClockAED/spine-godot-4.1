@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated April 5, 2025. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2025, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,8 +23,8 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #include "SpineBoneData.h"
@@ -50,12 +50,15 @@ void SpineBoneData::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("set_shear_x", "v"), &SpineBoneData::set_shear_x);
 	ClassDB::bind_method(D_METHOD("get_shear_y"), &SpineBoneData::get_shear_y);
 	ClassDB::bind_method(D_METHOD("set_shear_y", "v"), &SpineBoneData::set_shear_y);
-	ClassDB::bind_method(D_METHOD("get_transform_mode"), &SpineBoneData::get_transform_mode);
-	ClassDB::bind_method(D_METHOD("set_transform_mode", "v"), &SpineBoneData::set_transform_mode);
+	ClassDB::bind_method(D_METHOD("get_inherit"), &SpineBoneData::get_inherit);
+	ClassDB::bind_method(D_METHOD("set_inherit", "v"), &SpineBoneData::set_inherit);
 	ClassDB::bind_method(D_METHOD("is_skin_required"), &SpineBoneData::is_skin_required);
 	ClassDB::bind_method(D_METHOD("set_skin_required", "v"), &SpineBoneData::set_skin_required);
 	ClassDB::bind_method(D_METHOD("get_color"), &SpineBoneData::get_color);
 	ClassDB::bind_method(D_METHOD("set_color", "v"), &SpineBoneData::set_color);
+	ClassDB::bind_method(D_METHOD("get_icon"), &SpineBoneData::get_icon);
+	ClassDB::bind_method(D_METHOD("set_visible", "v"), &SpineBoneData::set_visible);
+	ClassDB::bind_method(D_METHOD("is_visible"), &SpineBoneData::is_visible);
 }
 
 int SpineBoneData::get_index() {
@@ -65,7 +68,9 @@ int SpineBoneData::get_index() {
 
 String SpineBoneData::get_bone_name() {
 	SPINE_CHECK(get_spine_object(), "")
-	return get_spine_object()->getName().buffer();
+	String name;
+	name.parse_utf8(get_spine_object()->getName().buffer());
+	return name;
 }
 
 Ref<SpineBoneData> SpineBoneData::get_parent() {
@@ -157,14 +162,14 @@ void SpineBoneData::set_shear_y(float v) {
 	get_spine_object()->setShearY(v);
 }
 
-SpineConstant::TransformMode SpineBoneData::get_transform_mode() {
-	SPINE_CHECK(get_spine_object(), SpineConstant::TransformMode::TransformMode_Normal)
-	return (SpineConstant::TransformMode) get_spine_object()->getTransformMode();
+SpineConstant::Inherit SpineBoneData::get_inherit() {
+	SPINE_CHECK(get_spine_object(), SpineConstant::Inherit::Inherit_Normal)
+	return (SpineConstant::Inherit) get_spine_object()->getInherit();
 }
 
-void SpineBoneData::set_transform_mode(SpineConstant::TransformMode v) {
+void SpineBoneData::set_inherit(SpineConstant::Inherit v) {
 	SPINE_CHECK(get_spine_object(), )
-	get_spine_object()->setTransformMode((spine::TransformMode) v);
+	get_spine_object()->setInherit((spine::Inherit) v);
 }
 
 bool SpineBoneData::is_skin_required() {
@@ -186,4 +191,19 @@ Color SpineBoneData::get_color() {
 void SpineBoneData::set_color(Color color) {
 	SPINE_CHECK(get_spine_object(), )
 	get_spine_object()->getColor().set(color.r, color.g, color.b, color.a);
+}
+
+String SpineBoneData::get_icon() {
+	SPINE_CHECK(get_spine_object(), "")
+	return get_spine_object()->getIcon().buffer();
+}
+
+bool SpineBoneData::is_visible() {
+	SPINE_CHECK(get_spine_object(), true)
+	return get_spine_object()->isVisible();
+}
+
+void SpineBoneData::set_visible(bool v) {
+	SPINE_CHECK(get_spine_object(), )
+	get_spine_object()->setVisible(v);
 }

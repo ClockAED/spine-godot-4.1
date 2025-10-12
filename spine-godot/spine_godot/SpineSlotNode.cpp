@@ -1,16 +1,16 @@
 /******************************************************************************
  * Spine Runtimes License Agreement
- * Last updated July 28, 2023. Replaces all prior versions.
+ * Last updated April 5, 2025. Replaces all prior versions.
  *
- * Copyright (c) 2013-2023, Esoteric Software LLC
+ * Copyright (c) 2013-2025, Esoteric Software LLC
  *
  * Integration of the Spine Runtimes into software or otherwise creating
  * derivative works of the Spine Runtimes is permitted under the terms and
  * conditions of Section 2 of the Spine Editor License Agreement:
  * http://esotericsoftware.com/spine-editor-license
  *
- * Otherwise, it is permitted to integrate the Spine Runtimes into software or
- * otherwise create derivative works of the Spine Runtimes (collectively,
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
  * "Products"), provided that each user of the Products must obtain their own
  * Spine Editor license and redistribution of the Products in any form must
  * include this license and copyright notice.
@@ -23,16 +23,24 @@
  * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
  * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THE
- * SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #include "SpineSlotNode.h"
 
 #ifdef TOOLS_ENABLED
+#ifdef SPINE_GODOT_EXTENSION
+// FIXME
+#else
 #include "editor/editor_node.h"
 #endif
+#endif
+#ifdef SPINE_GODOT_EXTENSION
+#include <godot_cpp/classes/viewport.hpp>
+#else
 #include "scene/main/viewport.h"
+#endif
 
 void SpineSlotNode::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("_on_world_transforms_changed", "spine_sprite"), &SpineSlotNode::on_world_transforms_changed);
@@ -99,15 +107,19 @@ void SpineSlotNode::_notification(int what) {
 }
 
 void SpineSlotNode::_get_property_list(List<PropertyInfo> *list) const {
+#ifdef SPINE_GODOT_EXTENSION
+	PackedStringArray slot_names;
+#else
 	Vector<String> slot_names;
+#endif
 	SpineSprite *sprite = cast_to<SpineSprite>(get_parent());
-	if (sprite) sprite->get_skeleton_data_res()->get_slot_names(slot_names);
+	if (sprite && sprite->get_skeleton_data_res().is_valid()) sprite->get_skeleton_data_res()->get_slot_names(slot_names);
 	else
 		slot_names.push_back(slot_name);
 	auto element = list->front();
 	while (element) {
 		auto property_info = element->get();
-		if (property_info.name == "SpineSlotNode") break;
+		if (property_info.name == StringName("SpineSlotNode")) break;
 		element = element->next();
 	}
 	PropertyInfo slot_name_property;
@@ -120,7 +132,7 @@ void SpineSlotNode::_get_property_list(List<PropertyInfo> *list) const {
 }
 
 bool SpineSlotNode::_get(const StringName &property, Variant &value) const {
-	if (property == "slot_name") {
+	if (property == StringName("slot_name")) {
 		value = slot_name;
 		return true;
 	}
@@ -128,7 +140,7 @@ bool SpineSlotNode::_get(const StringName &property, Variant &value) const {
 }
 
 bool SpineSlotNode::_set(const StringName &property, const Variant &value) {
-	if (property == "slot_name") {
+	if (property == StringName("slot_name")) {
 		slot_name = value;
 		SpineSprite *sprite = cast_to<SpineSprite>(get_parent());
 		update_transform(sprite);
