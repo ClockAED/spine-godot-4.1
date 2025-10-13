@@ -1088,6 +1088,33 @@ Animation *SkeletonJson::readAnimation(Json *root, SkeletonData *skeletonData) {
 					keyMap = nextMap;
 				}
 				timelines.add(timeline);
+			} else if (strcmp(timelineMap->_name, "color") == 0) {
+				RGBATimeline *timeline = new (__FILE__, __LINE__) RGBATimeline(frames, frames << 2, slotIndex);
+				keyMap = timelineMap->_child;
+				float time = Json::getFloat(keyMap, "time", 0);
+				toColor(color, Json::getString(keyMap, "color", 0), true);
+
+				for (frame = 0, bezier = 0;; ++frame) {
+					timeline->setFrame(frame, time, color.r, color.g, color.b, color.a);
+					nextMap = keyMap->_next;
+					if (!nextMap) {
+						// timeline.shrink(); // BOZO
+						break;
+					}
+					float time2 = Json::getFloat(nextMap, "time", 0);
+					toColor(newColor, Json::getString(nextMap, "color", 0), true);
+					curve = Json::getItem(keyMap, "curve");
+					if (curve) {
+						bezier = readCurve(curve, timeline, bezier, frame, 0, time, time2, color.r, newColor.r, 1);
+						bezier = readCurve(curve, timeline, bezier, frame, 1, time, time2, color.g, newColor.g, 1);
+						bezier = readCurve(curve, timeline, bezier, frame, 2, time, time2, color.b, newColor.b, 1);
+						bezier = readCurve(curve, timeline, bezier, frame, 3, time, time2, color.a, newColor.a, 1);
+					}
+					time = time2;
+					color = newColor;
+					keyMap = nextMap;
+				}
+				timelines.add(timeline);
 			} else {
 				ContainerUtil::cleanUpVectorOfPointers(timelines);
 				setError(NULL, "Invalid timeline type for a slot: ", timelineMap->_name);
