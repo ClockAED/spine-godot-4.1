@@ -1,3 +1,5 @@
+>spine-godot GDExtension (Godot 4.4.1-stable and 4.5-stable versions) works with data exported from Spine 4.1.xx.
+
 # Spine Runtimes
 
 This GitHub project hosts the Spine Runtimes which are needed to use [Spine](http://esotericsoftware.com/) 2D skeletal animation data with various game toolkits.
