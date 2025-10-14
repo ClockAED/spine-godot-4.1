@@ -493,7 +493,7 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 	}
 
 	/* Skins. */
-	skins = Json::getItem(root, "skins-skip");
+	skins = Json::getItem(root, "skins");
 	if (skins) {
 		Json *skinMap;
 		skeletonData->_skins.ensureCapacity(skins->_size);
@@ -824,7 +824,7 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 	}
 
 	/* Animations. */
-	animations = Json::getItem(root, "animations-skip");
+	animations = Json::getItem(root, "animations");
 	if (animations) {
 		Json *animationMap;
 		skeletonData->_animations.ensureCapacity(animations->_size);
