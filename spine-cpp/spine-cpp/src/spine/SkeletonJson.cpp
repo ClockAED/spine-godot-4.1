@@ -868,7 +868,7 @@ int SkeletonJson::readCurve(Json *curve, CurveTimeline *timeline, int bezier, in
 		timeline->setStepped(frame);
 		return bezier;
 	}
-    if (curve.size() == 4) {
+    if (curve->_size == 4) {
 		value = 0
 	}
 	curve = Json::getItem(curve, value << 2);
