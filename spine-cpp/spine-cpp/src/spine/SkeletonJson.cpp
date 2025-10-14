@@ -493,8 +493,8 @@ SkeletonData *SkeletonJson::readSkeletonData(const char *json) {
 	}
 
 	/* Skins. */
-	skins = Json::getItem(root, "skins-skip-this-field");
-	if (skins) {
+	skins = Json::getItem(root, "skins");
+	if (skeletonData->_version.startsWith("4.") && skins) {
 		Json *skinMap;
 		skeletonData->_skins.ensureCapacity(skins->_size);
 		skeletonData->_skins.setSize(skins->_size, 0);
