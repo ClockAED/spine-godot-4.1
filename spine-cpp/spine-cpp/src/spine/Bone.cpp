@@ -124,16 +124,15 @@ void Bone::updateWorldTransform(float x, float y, float rotation, float scaleX, 
 		case Inherit_Normal: {
 			float rx = (rotation + shearX) * MathUtil::Deg_Rad;
 			float ry = (rotation + 90 + shearY) * MathUtil::Deg_Rad;
+			float la = MathUtil::cos(rx) * scaleX;
+			float lb = MathUtil::cos(ry) * scaleY;
+			float lc = MathUtil::sin(rx) * scaleX;
+			float ld = MathUtil::sin(ry) * scaleY;
 			if (_skeleton.getData().getVersion().startsWith(SPINE_VERSION_STRING_2)) {
-				float la = MathUtil::cos(rx) * scaleX / parent->_ascaleX;
-				float lb = MathUtil::cos(ry) * scaleY / parent->_ascaleX;
-				float lc = MathUtil::sin(rx) * scaleX / parent->_ascaleY;
-				float ld = MathUtil::sin(ry) * scaleY / parent->_ascaleY;
-			} else {
-				float la = MathUtil::cos(rx) * scaleX;
-				float lb = MathUtil::cos(ry) * scaleY;
-				float lc = MathUtil::sin(rx) * scaleX;
-				float ld = MathUtil::sin(ry) * scaleY;
+				la = la / parent->_ascaleX;
+				lb = lb / parent->_ascaleX;
+				lc = lc / parent->_ascaleY;
+				ld = ld / parent->_ascaleY;
 			}
 			_a = pa * la + pb * lc;
 			_b = pa * lb + pb * ld;
