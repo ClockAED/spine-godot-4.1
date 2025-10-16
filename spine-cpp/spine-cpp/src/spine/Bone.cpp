@@ -31,6 +31,7 @@
 
 #include <spine/BoneData.h>
 #include <spine/Skeleton.h>
+#include <spine/SkeletonData.h>
 #include <spine/Version.h>
 
 using namespace spine;
