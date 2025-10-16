@@ -129,12 +129,12 @@ void Bone::updateWorldTransform(float x, float y, float rotation, float scaleX, 
 			float lb = MathUtil::cos(ry) * scaleY;
 			float lc = MathUtil::sin(rx) * scaleX;
 			float ld = MathUtil::sin(ry) * scaleY;
-			if (_skeleton.getData()->getVersion().startsWith(SPINE_VERSION_STRING_2)) {
-				la = la / parent->_ascaleX;
-				lb = lb / parent->_ascaleX;
-				lc = lc / parent->_ascaleY;
-				ld = ld / parent->_ascaleY;
-			}
+			// if (_skeleton.getData()->getVersion().startsWith(SPINE_VERSION_STRING_2)) {
+			// 	la = la / parent->_ascaleX;
+			// 	lb = lb / parent->_ascaleX;
+			// 	lc = lc / parent->_ascaleY;
+			// 	ld = ld / parent->_ascaleY;
+			// }
 			_a = pa * la + pb * lc;
 			_b = pa * lb + pb * ld;
 			_c = pc * la + pd * lc;
